@@ -52,7 +52,8 @@ export default class App extends React.Component {
             items: [],
             start: Object.assign({}, this.start),
             end: Object.assign({}, this.end),
-            active: false
+            active: false,
+            cancel: false
         };
     }
 
@@ -78,6 +79,15 @@ export default class App extends React.Component {
         });
     }
 
+    onCancelClick() {
+        if (this.state.active) {
+            this.setState({
+                cancel: true,
+                active: true
+            });
+        }
+    }
+
     onClick() {
         this.setState({
             active: true
@@ -85,22 +95,27 @@ export default class App extends React.Component {
     }
 
     onComplete() {
-        let start = Object.assign({}, this.start);
-        let end = Object.assign({}, this.end);
+        if(!this.state.cancel) {
+            let start = Object.assign({}, this.start);
+            let end = Object.assign({}, this.end);
 
-        this.end = start;
-        this.start = end;
+            this.end = start;
+            this.start = end;
+        }
 
         this.setState({
-            active: false
+            active: false,
+            cancel: false
         });
+
     }
 
     render() {
         return (
             <div>
                 <button onClick={this.onClick.bind(this)}>Test</button>
-                <TestComponent startState={this.start} endState={this.end} animate={this.state.active} onComplete={this.onComplete.bind(this)}>
+                <button onClick={this.onCancelClick.bind(this)}>Cancel</button>
+                <TestComponent startState={this.start} endState={this.end} cancel={this.state.cancel} animate={this.state.active} onComplete={this.onComplete.bind(this)}>
                     test
                 </TestComponent>
                 <button onClick={this.onAddChild.bind(this)}>Add Child</button>

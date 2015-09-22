@@ -132,6 +132,8 @@
 	            key: 'proptypes',
 	            value: {
 	                animate: _react2['default'].PropTypes.bool,
+	                cancel: _react2['default'].PropTypes.bool,
+	                cancelDuration: _react2['default'].PropTypes.number,
 	                component: _react2['default'].PropTypes.oneOfType([_react2['default'].PropTypes.element, _react2['default'].PropTypes.string]),
 	                enter: _react2['default'].PropTypes.object,
 	                leave: _react2['default'].PropTypes.leave,
@@ -143,6 +145,7 @@
 	        }, {
 	            key: 'defaultProps',
 	            value: _Object$assign({}, ComposedComponent.propTypes, {
+	                cancelDuration: 200,
 	                duration: 500,
 	                ease: 'ease',
 	                onComplete: noop
@@ -159,8 +162,10 @@
 	            this.callback = noop;
 	            this.start = props.startState;
 	            this.end = props.endState;
+	            this.animatingDOM = false;
 	            this.state = {
 	                animating: false,
+	                canceling: false,
 	                style: props.startState || {}
 	            };
 	        }
@@ -171,6 +176,8 @@
 	                if (!this.state.animating && props.animate && props.startState && props.endState) {
 	                    this.start = props.startState;
 	                    this.end = props.endState;
+	                    this.duration = props.duration;
+	                    this.ease = props.ease;
 
 	                    this.animate();
 	                }
@@ -184,6 +191,7 @@
 	                    this.duration = this.props.enter.duration;
 	                    this.ease = this.props.enter.ease;
 	                    this.callback = callback;
+	                    this.animatingDOM = true;
 
 	                    this.animate();
 	                }
@@ -197,6 +205,7 @@
 	                    this.duration = this.props.leave.duration;
 	                    this.ease = this.props.leave.ease;
 	                    this.callback = callback;
+	                    this.animatingDOM = true;
 
 	                    this.animate();
 	                }
@@ -205,7 +214,8 @@
 	            key: 'onComplete',
 	            value: function onComplete() {
 	                this.setState({
-	                    animating: false
+	                    animating: false,
+	                    canceling: false
 	                });
 
 	                this.props.onComplete();
@@ -245,7 +255,7 @@
 	                var delta = (time - this.startTime) / (this.duration || this.props.duration);
 	                var deltaState = {};
 
-	                var ease = _curves.bezier.apply(this, _easings2['default'][this.ease || this.props.ease]);
+	                var ease = _curves.bezier.apply(this, _easings2['default'][this.ease]);
 
 	                delta = delta > 1 ? 1 : delta;
 
@@ -257,8 +267,24 @@
 	                    style: deltaState
 	                });
 
-	                if (delta >= 1) {
+	                // we can only cancel if we aren't already
+	                if (this.props.cancel && !this.state.canceling && !this.animatingDOM) {
 	                    _raf2['default'].cancel(this.animation);
+
+	                    // animate from the state we canceled at, back to the start
+	                    this.end = this.start;
+	                    this.start = deltaState;
+	                    this.duration = this.props.cancelDuration;
+
+	                    // prevent canceling from doing anything
+	                    this.setState({
+	                        canceling: true
+	                    });
+
+	                    this.animate();
+	                } else if (delta >= 1) {
+	                    _raf2['default'].cancel(this.animation);
+
 	                    this.onComplete();
 	                } else {
 	                    this.animation = (0, _raf2['default'])(this.animator.bind(this));

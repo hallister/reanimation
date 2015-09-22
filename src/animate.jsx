@@ -11,6 +11,8 @@ export function Animate(ComposedComponent) {
 
         static proptypes = {
             animate: React.PropTypes.bool,
+            cancel: React.PropTypes.bool,
+            cancelDuration: React.PropTypes.number,
             component: React.PropTypes.oneOfType([
                 React.PropTypes.element,
                 React.PropTypes.string
@@ -23,6 +25,7 @@ export function Animate(ComposedComponent) {
         };
 
         static defaultProps = Object.assign({}, ComposedComponent.propTypes, {
+            cancelDuration: 200,
             duration: 500,
             ease: 'ease',
             onComplete: noop
@@ -35,8 +38,10 @@ export function Animate(ComposedComponent) {
             this.callback = noop;
             this.start = props.startState;
             this.end = props.endState;
+            this.animatingDOM = false;
             this.state = {
                 animating: false,
+                canceling: false,
                 style: props.startState || {}
             };
         }
@@ -45,6 +50,8 @@ export function Animate(ComposedComponent) {
             if (!this.state.animating && props.animate && props.startState && props.endState) {
                 this.start = props.startState;
                 this.end = props.endState;
+                this.duration = props.duration;
+                this.ease = props.ease;
 
                 this.animate()
             }
@@ -57,6 +64,7 @@ export function Animate(ComposedComponent) {
                 this.duration = this.props.enter.duration;
                 this.ease = this.props.enter.ease;
                 this.callback = callback;
+                this.animatingDOM = true;
 
                 this.animate();
             }
@@ -69,6 +77,7 @@ export function Animate(ComposedComponent) {
                 this.duration = this.props.leave.duration;
                 this.ease = this.props.leave.ease;
                 this.callback = callback;
+                this.animatingDOM = true;
 
                 this.animate();
             }
@@ -76,7 +85,8 @@ export function Animate(ComposedComponent) {
 
         onComplete() {
             this.setState({
-                animating: false
+                animating: false,
+                canceling: false
             });
 
             this.props.onComplete();
@@ -103,7 +113,7 @@ export function Animate(ComposedComponent) {
             let delta = (time - this.startTime) / (this.duration || this.props.duration);
             let deltaState = {};
 
-            let ease = bezier.apply(this, easings[this.ease || this.props.ease]);
+            let ease = bezier.apply(this, easings[this.ease]);
 
             delta = delta > 1 ? 1 : delta;
 
@@ -117,8 +127,26 @@ export function Animate(ComposedComponent) {
                 }
             );
 
-            if (delta >= 1) {
+            // we can only cancel if we aren't already
+            if (this.props.cancel && !this.state.canceling && !this.animatingDOM) {
                 raf.cancel(this.animation);
+
+                // animate from the state we canceled at, back to the start
+                this.end = this.start;
+                this.start = deltaState;
+                this.duration = this.props.cancelDuration;
+
+                // prevent canceling from doing anything
+                this.setState(
+                    {
+                        canceling: true
+                    }
+                );
+
+                this.animate();
+            } else if (delta >= 1) {
+                raf.cancel(this.animation);
+
                 this.onComplete();
             } else {
                 this.animation = raf(this.animator.bind(this));

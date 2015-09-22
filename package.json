@@ -1,6 +1,6 @@
 {
   "name": "reanimation",
-  "version": "0.0.1",
+  "version": "0.1.1",
   "description": "A React component for animations.",
   "main": "index.js",
   "readme": "README.md",

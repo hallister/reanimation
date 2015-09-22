@@ -91,6 +91,15 @@ constructor(props) {
 Not that you may want to change `this.start` and `this.end` to reflect the next animation, in addition to setting 
 `this.state.doAnimation` to false.
 
+##### Canceling
+
+State-based transitions allow for canceling the transition, which will revert the state from the current animation state
+back to the start animation state in `cancelDuration` milliseconds when the `cancel` prop is true **and** there is an 
+animation.
+ 
+NOTE: Setting the `cancel` prop to true at the beginning of an animation will cancel the animation in the first 
+frame. In most cases this will simply appear like nothing happened.
+
 ### DOM-based
 
 DOM-based animations function based on `ReactTransitionGroup`, allowing us to animate when the component is prepared to 
