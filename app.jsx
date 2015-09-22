@@ -2,7 +2,15 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import { Animate } from './src/animate.jsx';
 import Animations from './src/animations.jsx';
-import { TestComponent, Test2Component } from './src/test';
+
+@Animate
+export class TestComponent extends React.Component {
+    render() {
+        return (
+            <div style={this.props.style}>Test</div>
+        );
+    }
+}
 
 export default class App extends React.Component {
     constructor(props) {
