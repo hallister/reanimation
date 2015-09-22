@@ -15,7 +15,7 @@ module.exports = {
     externals: externals,
     output: {
         path: path.join(__dirname, 'dist'),
-        filename: PROD ?  name + '.js' : name + '.min.js'
+        filename: PROD ?  name + '.min.js' : name + '.js'
     },
     resolve: {
         extensions: ['', '.js', '.jsx']
