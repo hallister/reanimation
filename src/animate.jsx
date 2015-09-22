@@ -17,11 +17,12 @@ export function Animate(ComposedComponent) {
                 React.PropTypes.element,
                 React.PropTypes.string
             ]),
+            ease: React.PropTypes.string,
+            endState: React.PropTypes.object,
             enter: React.PropTypes.object,
             leave: React.PropTypes.leave,
-            startState: React.PropTypes.object,
-            endState: React.PropTypes.object,
-            onComplete: React.PropTypes.func
+            onComplete: React.PropTypes.func,
+            startState: React.PropTypes.object
         };
 
         static defaultProps = Object.assign({}, ComposedComponent.propTypes, {
@@ -89,12 +90,14 @@ export function Animate(ComposedComponent) {
                 canceling: false
             });
 
+            this.animatingDOM = false;
             this.props.onComplete();
             this.callback();
         }
 
         render() {
-            let { component, duration, startState, endState, ease, onComplete, ...other } = this.props;
+            let { animate, cancel, cancelDuration, duration, endState, enter, leave, onComplete, startState, ease,
+                  ...other } = this.props;
 
             return <ComposedComponent {...other} style={this.state.style} />;
         }

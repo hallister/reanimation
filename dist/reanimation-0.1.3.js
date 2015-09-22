@@ -135,11 +135,12 @@
 	                cancel: _react2['default'].PropTypes.bool,
 	                cancelDuration: _react2['default'].PropTypes.number,
 	                component: _react2['default'].PropTypes.oneOfType([_react2['default'].PropTypes.element, _react2['default'].PropTypes.string]),
+	                ease: _react2['default'].PropTypes.string,
+	                endState: _react2['default'].PropTypes.object,
 	                enter: _react2['default'].PropTypes.object,
 	                leave: _react2['default'].PropTypes.leave,
-	                startState: _react2['default'].PropTypes.object,
-	                endState: _react2['default'].PropTypes.object,
-	                onComplete: _react2['default'].PropTypes.func
+	                onComplete: _react2['default'].PropTypes.func,
+	                startState: _react2['default'].PropTypes.object
 	            },
 	            enumerable: true
 	        }, {
@@ -218,6 +219,7 @@
 	                    canceling: false
 	                });
 
+	                this.animatingDOM = false;
 	                this.props.onComplete();
 	                this.callback();
 	            }
@@ -225,14 +227,18 @@
 	            key: 'render',
 	            value: function render() {
 	                var _props = this.props;
-	                var component = _props.component;
+	                var animate = _props.animate;
+	                var cancel = _props.cancel;
+	                var cancelDuration = _props.cancelDuration;
 	                var duration = _props.duration;
-	                var startState = _props.startState;
 	                var endState = _props.endState;
-	                var ease = _props.ease;
+	                var enter = _props.enter;
+	                var leave = _props.leave;
 	                var onComplete = _props.onComplete;
+	                var startState = _props.startState;
+	                var ease = _props.ease;
 
-	                var other = _objectWithoutProperties(_props, ['component', 'duration', 'startState', 'endState', 'ease', 'onComplete']);
+	                var other = _objectWithoutProperties(_props, ['animate', 'cancel', 'cancelDuration', 'duration', 'endState', 'enter', 'leave', 'onComplete', 'startState', 'ease']);
 
 	                return _react2['default'].createElement(ComposedComponent, _extends({}, other, { style: this.state.style }));
 	            }
