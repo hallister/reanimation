@@ -3,7 +3,6 @@
   "version": "0.1.1",
   "description": "A React component for animations.",
   "main": "index.js",
-  "readme": "README.md",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "build": "./node_modules/.bin/webpack --colors --progress --display-modules  --config webpack-production.config.js && PROD_DEV=1 ./node_modules/.bin/webpack --colors --progress --display-modules  --config webpack-production.config.js"
