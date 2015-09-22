@@ -1,0 +1,48 @@
+{
+  "name": "reanimation",
+  "version": "0.0.1",
+  "description": "A React component for animations.",
+  "main": "index.js",
+  "readme": "README.md",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "./node_modules/.bin/webpack --colors --progress --display-modules  --config webpack-production.config.js && PROD_DEV=1 ./node_modules/.bin/webpack --colors --progress --display-modules  --config webpack-production.config.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/hallister/reanimation.git"
+  },
+  "keywords": [
+    "react",
+    "animation",
+    "animate",
+    "component"
+  ],
+  "author": "Justin Hall",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/hallister/reanimation/issues"
+  },
+  "homepage": "https://github.com/hallister/reanimation#readme",
+  "devDependencies": {
+    "babel-core": "^5.8.25",
+    "babel-loader": "^5.3.2",
+    "babel-runtime": "^5.8.24",
+    "json-loader": "^0.5.3",
+    "react": "^0.14.0-rc1",
+    "react-dom": "^0.14.0-rc1",
+    "uglify-loader": "^1.2.0",
+    "webpack": "^1.12.2",
+    "webpack-dev-server": "^1.11.0"
+  },
+  "babel": {
+    "stage": 0,
+    "optional": [
+      "runtime"
+    ]
+  },
+  "dependencies": {
+    "raf": "^3.1.0",
+    "react-addons-transition-group": "^0.14.0-rc1"
+  }
+}
