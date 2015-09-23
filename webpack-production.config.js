@@ -4,7 +4,7 @@ var pjson = require('./package.json');
 
 var PROD = JSON.parse(process.env.PROD_DEV || "0");
 
-var name = pjson.name + '-' + pjson.version;
+var name = pjson.name;
 
 var externals = [];
 externals.push(/^react(\/.*)?$/, /^react-dom(\/.*)?$/);
