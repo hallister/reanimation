@@ -18,7 +18,10 @@ module.exports = {
         filename: PROD ?  name + '.min.js' : name + '.js'
     },
     resolve: {
-        extensions: ['', '.js', '.jsx']
+        extensions: ['', '.js', '.jsx'],
+        alias: {
+            "react": __dirname + '/node_modules/react'
+        }
     },
     plugins: PROD ? [
         new webpack.optimize.UglifyJsPlugin({minimize: true})
